@@ -20,8 +20,8 @@ public:
 	int TmostY;
 	int BmostX;
 	int BmostY;
-	int centroidX;
-	int centroidY;
+	float centroidX;
+	float centroidY;
 };
 
 
@@ -86,10 +86,22 @@ int main(){
 		drawContours(tempWindow, contours,i,color,2,8,hierarchy, 0,Point());
 		imshow(windowName, tempWindow);
 	}
-	
+	vector<Moments> mu(contours.size());
+	for(int i = 0;i<contours.size(); i++){
+		mu[i] = moments(contours[i],false);
+	}
+	vector<Point2f> mc(contours.size());
+	for(int i = 0;i<contours.size(); i++){
+		mc[i] = Point2f(mu[i].m10/mu[i].m00, mu[i].m01/mu[i].m00);
+		cout<<mc[i].x<<endl;
+		cout<<mc[i].y<<endl<<endl;
+	}
+
 	kontur tab[contours.size()];
 	uchar* p = dupafinal.data;
 	for (int a = 0; a<contours.size(); a++){
+		tab[a].centroidX = mc[a].x;
+		tab[a].centroidY = mc[a].y;
 		tab[a].LmostX=-1;
 		tab[a].LmostY=-1;
 		tab[a].RmostX=-1;
@@ -125,7 +137,6 @@ int main(){
 				}
 			}
 		}
-
 	}
 	imshow("Window", dupafinal);
 	waitKey(0);
