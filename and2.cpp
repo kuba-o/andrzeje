@@ -90,53 +90,43 @@ int main(){
 	kontur tab[contours.size()];
 	uchar* p = dupafinal.data;
 	for (int a = 0; a<contours.size(); a++){
-
-	}
-	int LmostX=-1;
-	int LmostY=-1;
-	int RmostX=-1;
-	int RmostY=-1;
-	int TmostX=-1;
-	int TmostY=-1;
-	int BmostX=-1;
-	int BmostY=-1;
-	
-	cout<<dupafinal.rows<<endl;
-	for (int i = 0; i<dupafinal.rows; i++){
-		for (int j = 0; j<dupafinal.cols; j++){
-			p = dupafinal.data + dupafinal.cols*i+j;
-			if (*p==255){
-				if (TmostY == -1)
-					TmostY = i;
-				if (TmostX == -1)
-					TmostX = j;
-				BmostX = j;
-				BmostY = i;
+		tab[a].LmostX=-1;
+		tab[a].LmostY=-1;
+		tab[a].RmostX=-1;
+		tab[a].RmostY=-1;
+		tab[a].TmostX=-1;
+		tab[a].TmostY=-1;
+		tab[a].BmostX=-1;
+		tab[a].BmostY=-1;
+		for (int i = 0; i<dupafinal.rows; i++){
+			for (int j = 0; j<dupafinal.cols; j++){
+				p = dupafinal.data + dupafinal.cols*i+j;
+				if (*p==255){
+					if (tab[a].TmostY == -1)
+						tab[a].TmostY = i;
+					if (tab[a].TmostX == -1)
+						tab[a].TmostX = j;
+					tab[a].BmostX = j;
+					tab[a].BmostY = i;
+				}
 			}
 		}
-	}
 
-	for (int i = 0; i<dupafinal.cols; i++){
-		for (int j = 0; j<dupafinal.rows; j++){
-			p = dupafinal.data + dupafinal.cols*j+i;
-			if (*p==255){
-				if (LmostX == -1)
-					LmostX = i;
-				if (LmostY == -1)
-					LmostY = j;
-				RmostX = i;
-				RmostY = j;
+		for (int i = 0; i<dupafinal.cols; i++){
+			for (int j = 0; j<dupafinal.rows; j++){
+				p = dupafinal.data + dupafinal.cols*j+i;
+				if (*p==255){
+					if (tab[a].LmostX == -1)
+						tab[a].LmostX = i;
+					if (tab[a].LmostY == -1)
+						tab[a].LmostY = j;
+					tab[a].RmostX = i;
+					tab[a].RmostY = j;
+				}
 			}
 		}
+
 	}
-	circle( dupafinal, Point(BmostX, BmostY), 5, Scalar(255,255,255), 3, 8, 0 );
-	circle( dupafinal, Point(TmostX, TmostY), 5, Scalar(255,255,255), 3, 8, 0 );
-	circle( dupafinal, Point(LmostX, LmostY), 5, Scalar(255,255,255), 3, 8, 0 );
-	circle( dupafinal, Point(RmostX, RmostY), 5, Scalar(255,255,255), 3, 8, 0 );
-	cout<<"TmostX: "<<TmostX<<endl;
-	cout<<"TmostY: "<<TmostY<<endl;
-	cout<<"BmostX: "<<BmostX<<endl;
-	cout<<"BmostY: "<<BmostY<<endl;
 	imshow("Window", dupafinal);
 	waitKey(0);
 	return 0;
