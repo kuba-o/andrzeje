@@ -10,7 +10,7 @@
 using namespace cv;
 using namespace std;
 
-Mat pattern = imread("/home/kuba/Documents/andrzejeVision/k1.jpg", CV_LOAD_IMAGE_COLOR);
+Mat pattern = imread("/home/kuba/Documents/vision/andrzejeVision/k1.jpg", CV_LOAD_IMAGE_COLOR);
 //Mat pattern = imread("/home/kuba/Documents/andrzejeVision/template.png", CV_LOAD_IMAGE_COLOR);
 //Mat pattern = imread("/home/kuba/Documents/andrzejeVision/template2.png", CV_LOAD_IMAGE_COLOR);
 int checkX, checkY;
@@ -83,7 +83,7 @@ public:
 
 	void countValue(){
 		for (int i =0; i<8; i++){
-			if (colors[i][1]==255)
+			if (colors[i][1]<180)
 				values[i] = 1;
 			else
 				values[i] = 0;
@@ -111,7 +111,7 @@ int main(){
 
 		Vec3b p = pattern.at<Vec3b>(center);
 
-		if ((int(p.val[2]) > 200) && int(p.val[1] == 0)){
+		if ((int(p.val[2]) > 120) && int(p.val[1] < 50) && int(p.val[1] < 50)){
 			howManyTotal++;
 		}
 	}
@@ -144,7 +144,7 @@ int main(){
 	//cout<<howManyTotal<<endl;
 	tab[0].calcDistances();
 	tab[0].getCentralColors();
-	//tab[0].countValue();
+	tab[0].countValue();
 
 	namedWindow( "Hough Circle Transform Demo", CV_WINDOW_AUTOSIZE );
 	imshow("pattern",pattern);
