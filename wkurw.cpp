@@ -22,6 +22,7 @@ public:
 	int BmostY;
 	float centroidX;
 	float centroidY;
+	vector <Point2f> corners;
 };
 
 Mat pattern = imread("/home/kuba/Documents/vision/andrzejeVision/znaczki.png", CV_LOAD_IMAGE_COLOR);
@@ -52,7 +53,7 @@ int main(){
 	vector<Point2f> mc(contours.size());
 	
 	kontur tab[contours.size()];
-	String name = "okienko";
+	String name = "Window #";
 	char c = '2';
 	String windowName;
 	cout<<contours.size()<<endl;
@@ -114,10 +115,20 @@ int main(){
 		circle( tempWindow, Point(tab[a].RmostX, tab[a].RmostY), 5, Scalar(200,200,200), 3, 8, 0 );
 		circle( tempWindow, Point(tab[a].LmostX, tab[a].LmostY), 5, Scalar(200,200,200), 3, 8, 0 );
 		circle( tempWindow, Point(tab[a].centroidX, tab[a].centroidY), 5, Scalar(200, 200, 200), 3, 8, 0);
-		
+		Point2f pt = Point (tab[a].LmostX, tab[a].LmostY);
+		tab[a].corners.push_back(pt);
+		pt = Point (tab[a].RmostX, tab[a].RmostY);
+		tab[a].corners.push_back(pt);
+		pt = Point (tab[a].TmostX, tab[a].TmostY);
+		tab[a].corners.push_back(pt);
+		pt = Point (tab[a].BmostX, tab[a].BmostY);
+		tab[a].corners.push_back(pt);
 		imshow(windowName, tempWindow);	
+
+
 	}
-	//imshow("Window", tempWindow);
+	cout<<tab[0].corners<<endl;
+	imshow("Window", patternThresh);
 
 
 	waitKey(0);
