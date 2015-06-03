@@ -55,7 +55,7 @@ int main(){
 	String name = "okienko";
 	char c = '2';
 	String windowName;
-
+	cout<<contours.size()<<endl;
 	for (int a =0; a<contours.size(); a++){
 		Scalar color = Scalar(0,255,0);
 		//drawContours(drawing2, contours,i,color,2,8,hierarchy, 0,Point());
