@@ -10,7 +10,7 @@
 using namespace cv;
 using namespace std;
 
-class kontur{
+class kontur{ 
 public:
 	int LmostX;
 	int LmostY;
@@ -30,10 +30,10 @@ Mat patternGray = imread("/home/kuba/Documents/vision/andrzejeVision/rumcajs2.pn
 Mat patternBlurred, patternThresh, readyToFind;
 
 int main(){
-	Scalar color = Scalar(255,255, 255);
+	Scalar color = Scalar(0,255,0);
 	GaussianBlur( patternGray, patternBlurred, Size(3, 3), 0 );
 	namedWindow("Window", CV_WINDOW_AUTOSIZE);
-	threshold(patternGray, patternThresh, 200, 255,0);
+	threshold(patternGray, patternThresh, 100, 255,0);
 	//adaptiveThreshold(patternBlurred, adaThresh,130,CV_ADAPTIVE_THRESH_MEAN_C, CV_THRESH_BINARY,75,10);  
 	bitwise_not(patternGray, readyToFind);
 	vector<vector<Point> > contours;
@@ -60,8 +60,8 @@ int main(){
 	// then adjust the threshold to actually make it binary
 	threshold(dupa, dupa2, 100, 255, CV_THRESH_BINARY);
 	
-	findContours(dupa2,contours,hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE);
-	cout<<contours.size()<<endl;
+	findContours(dupa2,contours,hierarchy, CV_RETR_EXTERNAL, CV_CHAIN_APPROX_SIMPLE);
+	cout<<contours.size()<<"a"<<endl;
 	Mat dupamilion = Mat::zeros(dupa2.size(),CV_8UC3);
 	Mat dupamilion1 = Mat::zeros(dupa2.size(),CV_8UC3);
 	Mat finalnadupa = Mat::zeros(dupa2.size(),CV_8UC3);
@@ -75,17 +75,13 @@ int main(){
 	cvtColor(dupamilion, dupamiliontemp, CV_RGB2GRAY);
 
 	// then adjust the threshold to actually make it binary
-	threshold(dupamiliontemp, dupafinal, 100, 255, CV_THRESH_BINARY);	
+	threshold(dupamiliontemp, dupafinal, 30, 255, CV_THRESH_BINARY);	
 	String path;
 	String windowName = "lol";
-	char a='2';
-	for (int i =0; i<contours.size(); i++){
-		windowName +=a;
-		namedWindow(windowName, CV_WINDOW_AUTOSIZE);
-		Mat tempWindow = Mat::zeros(patternGray.size(),CV_8UC3);
-		drawContours(tempWindow, contours,i,color,2,8,hierarchy, 0,Point());
-		imshow(windowName, tempWindow);
-	}
+	char b='2';
+
+	
+		cout<<"kontury:"<<contours.size()<<endl;
 	vector<Moments> mu(contours.size());
 	for(int i = 0;i<contours.size(); i++){
 		mu[i] = moments(contours[i],false);
@@ -96,22 +92,15 @@ int main(){
 		cout<<mc[i].x<<endl;
 		cout<<mc[i].y<<endl<<endl;
 	}
-
-	 vector<vector<Point> > contours_poly( contours.size() );
-  vector<Rect> boundRect( contours.size() );
-  vector<Point2f>center( contours.size() );
-  vector<float>radius( contours.size() );
-
-  for( int i = 0; i < contours.size(); i++ )
-     { approxPolyDP( Mat(contours[i]), contours_poly[i], 3, true );
-       boundRect[i] = boundingRect( Mat(contours_poly[i]) );
-       minEnclosingCircle( (Mat)contours_poly[i], center[i], radius[i] );
-     }
-
-
+	
 	kontur tab[contours.size()];
 	uchar* p = dupafinal.data;
-	for (int a = 0; a<contours.size(); a++){
+
+	for (int a =0; a<contours.size(); a++){
+		windowName +=b;
+		namedWindow(windowName, CV_WINDOW_AUTOSIZE);
+		Mat tempWindow = Mat::zeros(patternGray.size(),CV_8UC3);
+		drawContours(tempWindow, contours,a,color,2,8,hierarchy, 0,Point());
 		tab[a].centroidX = mc[a].x;
 		tab[a].centroidY = mc[a].y;
 		tab[a].LmostX=-1;
@@ -122,9 +111,9 @@ int main(){
 		tab[a].TmostY=-1;
 		tab[a].BmostX=-1;
 		tab[a].BmostY=-1;
-		for (int i = 0; i<dupafinal.rows; i++){
-			for (int j = 0; j<dupafinal.cols; j++){
-				p = dupafinal.data + dupafinal.cols*i+j;
+		for (int i = 0; i<tempWindow.rows; i++){
+			for (int j = 0; j<tempWindow.cols; j++){
+				p = tempWindow.data + tempWindow.cols*i+j;
 				if (*p==255){
 					if (tab[a].TmostY == -1)
 						tab[a].TmostY = i;
@@ -136,9 +125,9 @@ int main(){
 			}
 		}
 
-		for (int i = 0; i<dupafinal.cols; i++){
-			for (int j = 0; j<dupafinal.rows; j++){
-				p = dupafinal.data + dupafinal.cols*j+i;
+		for (int i = 0; i<tempWindow.cols; i++){
+			for (int j = 0; j<tempWindow.rows; j++){
+				p = tempWindow.data + tempWindow.cols*j+i;
 				if (*p==255){
 					if (tab[a].LmostX == -1)
 						tab[a].LmostX = i;
@@ -149,6 +138,14 @@ int main(){
 				}
 			}
 		}
+		
+	circle( tempWindow, Point(tab[1].BmostX, tab[1].BmostY), 5, Scalar(255,255,255), 3, 8, 0 );
+	circle( tempWindow, Point(tab[1].TmostX, tab[1].TmostY), 5, Scalar(255,255,255), 3, 8, 0 );
+	circle( tempWindow, Point(tab[1].RmostX, tab[1].RmostY), 5, Scalar(255,255,255), 3, 8, 0 );
+	circle( tempWindow, Point(tab[1].LmostX, tab[1].LmostY), 5, Scalar(255,255,255), 3, 8, 0 );
+	imshow(windowName, tempWindow);
+	//Vec3b p=tempWindow.at<Vec3b>(tab[1].LmostX,tab[1].RmostY);
+	//cout<<int(p.val[0])<<endl;
 	}
 	imshow("Window", dupafinal);
 	waitKey(0);
