@@ -102,12 +102,6 @@ int main(){
   vector<Point2f>center( contours.size() );
   vector<float>radius( contours.size() );
 
-  for( int i = 0; i < contours.size(); i++ )
-     { approxPolyDP( Mat(contours[i]), contours_poly[i], 3, true );
-       boundRect[i] = boundingRect( Mat(contours_poly[i]) );
-       minEnclosingCircle( (Mat)contours_poly[i], center[i], radius[i] );
-     }
-
 
 	kontur tab[contours.size()];
 	uchar* p = dupafinal.data;

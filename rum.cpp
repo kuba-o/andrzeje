@@ -13,7 +13,7 @@ using namespace std;
 class kontur{ 
 public:
 	int LmostX;
-	int LmostY;
+	int LmostY;	
 	int RmostX;
 	int RmostY;
 	int TmostX;
