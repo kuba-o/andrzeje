@@ -232,7 +232,7 @@ int main(){
 			circle( pattern, Point(asd.TmostX, asd.TmostY), 5, Scalar(0,255,0), 3, 8, 0 );
 			circle( pattern, Point(asd.RmostX, asd.RmostY), 5, Scalar(0,0,255), 3, 8, 0 );
 			circle( pattern, Point(asd.LmostX, asd.LmostY), 5, Scalar(255,255,2), 3, 8, 0 );
-			imshow("asdsad", pattern);
+			//imshow("asdsad", pattern);
 			Point2f pt = Point (asd.LmostX, asd.LmostY);
 			asd.corners.push_back(pt);
 			pt = Point (asd.TmostX, asd.TmostY);
@@ -261,9 +261,7 @@ int main(){
 			cvtColor(quad, quadGray, CV_RGB2GRAY);
 			threshold(quadGray, threshQuad, 120, 255,0);
 			HoughCircles( threshQuad, circles, CV_HOUGH_GRADIENT, 1,10, 255, 10, threshQuad.cols/2-5, threshQuad.cols/2+5);
-			//imshow("asd", threshQuad);
-			cout<<contours.size()<<endl;
-			cout<<circles.size()<<endl;
+			
 			if (circles.size() > 0 && circles.size() < 5){
 				imshow("image", dst);
 				int value  = GetValue(quad);
