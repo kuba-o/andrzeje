@@ -136,13 +136,13 @@ public:
 	vector <Point2f> corners;
 };
 
-String path = "/home/kuba/Documents/vision/andrzejeVision/falsePositive3.jpg";
+String path = "/home/kuba/Documents/vision/andrzejeVision/wall.jpg";
 Mat pattern = imread(path, CV_LOAD_IMAGE_COLOR);
 Mat patternGray = imread(path, CV_LOAD_IMAGE_GRAYSCALE);
 Mat patternThresh, drawing1Gray, drawing1Thresh, threshQuad, quadGray;
 
 int main(){
-	threshold(patternGray, patternThresh, 120, 255,0);
+	threshold(patternGray, patternThresh, 100, 255,0);
 
 	vector<Vec3f> circles;
 	vector<vector<Point> > contours;
@@ -150,10 +150,11 @@ int main(){
 
 	findContours(patternThresh,contours,hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE);
 	Mat drawing1 = Mat::zeros(patternGray.size(),CV_8UC3);
-	for (int i =1; i<contours.size(); i++){
-		drawContours(drawing1, contours,i,Scalar(255, 255, 255),-1,8,hierarchy, 0,Point());
+	for (int i =0; i<contours.size(); i++){
+		drawContours(drawing1, contours,i,Scalar(i, i, i),1,8,hierarchy, 0,Point());
 	}
 	
+	cout<<contours.size()<<endl;
 	cvtColor(drawing1, drawing1Gray, CV_RGB2GRAY);
 	threshold(drawing1Gray, drawing1Thresh, 120, 255,0);		
 	findContours(drawing1Thresh,contours,hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE);
@@ -191,7 +192,7 @@ int main(){
 		asd.TmostY=-1;
 		asd.BmostX=-1;
 		asd.BmostY=-1;
-		if (asd.area > 10000){
+		if (asd.area > 700){
 			windowName = name + c;
 			c++;
 			Mat tempWindow(pattern.size(),CV_8UC3, Scalar(0));
@@ -226,11 +227,12 @@ int main(){
 					}
 				}
 			}
-			//cout<<asd.LmostY<<endl<<asd.LmostX<<endl;
+			
 			circle( pattern, Point(asd.BmostX, asd.BmostY), 5, Scalar(255,0,0), 3, 8, 0 );
 			circle( pattern, Point(asd.TmostX, asd.TmostY), 5, Scalar(0,255,0), 3, 8, 0 );
 			circle( pattern, Point(asd.RmostX, asd.RmostY), 5, Scalar(0,0,255), 3, 8, 0 );
 			circle( pattern, Point(asd.LmostX, asd.LmostY), 5, Scalar(255,255,2), 3, 8, 0 );
+			imshow("asdsad", pattern);
 			Point2f pt = Point (asd.LmostX, asd.LmostY);
 			asd.corners.push_back(pt);
 			pt = Point (asd.TmostX, asd.TmostY);
@@ -259,7 +261,9 @@ int main(){
 			cvtColor(quad, quadGray, CV_RGB2GRAY);
 			threshold(quadGray, threshQuad, 120, 255,0);
 			HoughCircles( threshQuad, circles, CV_HOUGH_GRADIENT, 1,10, 255, 10, threshQuad.cols/2-5, threshQuad.cols/2+5);
-			
+			//imshow("asd", threshQuad);
+			cout<<contours.size()<<endl;
+			cout<<circles.size()<<endl;
 			if (circles.size() > 0 && circles.size() < 5){
 				imshow("image", dst);
 				int value  = GetValue(quad);
