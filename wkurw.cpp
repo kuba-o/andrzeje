@@ -136,14 +136,15 @@ public:
 	vector <Point2f> corners;
 };
 
-String path = "/home/kuba/Documents/vision/andrzejeVision/znaczki.png";
+String path = "/home/kuba/Documents/vision/andrzejeVision/falsePositive3.jpg";
 Mat pattern = imread(path, CV_LOAD_IMAGE_COLOR);
 Mat patternGray = imread(path, CV_LOAD_IMAGE_GRAYSCALE);
-Mat patternThresh, drawing1Gray, drawing1Thresh;
+Mat patternThresh, drawing1Gray, drawing1Thresh, threshQuad, quadGray;
 
 int main(){
 	threshold(patternGray, patternThresh, 120, 255,0);
 
+	vector<Vec3f> circles;
 	vector<vector<Point> > contours;
 	vector<Vec4i> hierarchy;
 
@@ -255,12 +256,18 @@ int main(){
 			quad_pts.push_back(Point2f(0, quad.rows));
 			Mat transmtx = getPerspectiveTransform(asd.corners, quad_pts);
 			warpPerspective(pattern, quad, transmtx, quad.size());
-			imshow("image", dst);
-			int value  = GetValue(quad);
-			string s=NumberToString(value);
-			putText( quad, s, Point(160,160), FONT_HERSHEY_SIMPLEX, 1, color, 2,1);
-			imshow(windowNameQuadr, quad);
-			d++;
+			cvtColor(quad, quadGray, CV_RGB2GRAY);
+			threshold(quadGray, threshQuad, 120, 255,0);
+			HoughCircles( threshQuad, circles, CV_HOUGH_GRADIENT, 1,10, 255, 10, threshQuad.cols/2-5, threshQuad.cols/2+5);
+			
+			if (circles.size() > 0 && circles.size() < 5){
+				imshow("image", dst);
+				int value  = GetValue(quad);
+				string s=NumberToString(value);
+				putText( quad, s, Point(160,160), FONT_HERSHEY_SIMPLEX, 1, color, 2,1);
+				imshow(windowNameQuadr, quad);
+				d++;
+			}
 		}
 	}
 
