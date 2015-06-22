@@ -2,17 +2,18 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <stdio.h>
+#include <stdlib.h>
 #include <iostream>
-#include <string>
+#include <string> 
 #include <sstream>
 #include <cmath>
 
 using namespace cv;
 using namespace std;
-Mat pattern = imread("/home/kuba/Documents/vision/andrzejeVision/przyklad1.jpg", CV_LOAD_IMAGE_COLOR);
+Mat pattern = imread("/home/kuba/Documents/vision/andrzejeVision/testel.jpg", CV_LOAD_IMAGE_COLOR);
 
-float height = 240;
-float width = 240;
+float height = pattern.rows;
+float width = pattern.cols;
 float h4 = height/4;
 float w4 = width/4;
 
@@ -52,8 +53,10 @@ int main(){
 
 	for (int i=0; i<8; i++){
 		point = pattern.at<Vec3b>(characteristicPoints[i]);
-		if (int(point.val[2]) > 200 && int(point.val[1])<100)
+		if (int(point.val[2]) > 100 && int(point.val[1])<50)
 			whichSegment = i;
+
+		//circle( pattern, Point(characteristicPoints[(i+whichSegment)%8].x, characteristicPoints[(i+whichSegment)%8].y), 5, Scalar(0,255,0), 3, 8, 0 );
 	}
 
 	for (int i=0; i<8; i++){
@@ -74,15 +77,25 @@ int main(){
 		codedValue +=1;
 
 	for (int i = 1; i<8; i++){
-		if (pointValues[i][0]>150){
+		cout<<"WART"<<pointValues[i][0]<<endl;
+
+		if (pointValues[i][0]>120){
+
 			segmentValues[i]=1;
 			codedValue += pow(2, i);
 		}
-		else
+		else{
 			segmentValues[i]=0;
-	}
 
+		}
+	}
+	
+	for (int i =1; i<8; i++)
+		cout<<segmentValues[i]<<endl;
+	
+	cout<<"ee"<<endl;
 	cout<<endl<<codedValue<<endl;
+	
 	imshow("pattern", pattern);
 
 	waitKey(0);
